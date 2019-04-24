@@ -50,14 +50,14 @@ public class DatabaseConnection extends DBConfig implements TestConnectionTrait{
 
 
     @Override
-    public void testConnection() {
+    public void testConnection() throws SQLException {
         String selectTableSQL = "SELECT 2 + 2";
 
         try {
             Connection connection = this.getDbConnection();
             this.statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery(selectTableSQL);
+            ResultSet rs = this.statement.executeQuery(selectTableSQL);
 
             while (rs.next()) {
                 String data = rs.getString(1);
@@ -68,6 +68,8 @@ public class DatabaseConnection extends DBConfig implements TestConnectionTrait{
             System.out.println(e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }finally {
+            this.statement.close();
         }
     }
 }

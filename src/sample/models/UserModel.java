@@ -16,7 +16,7 @@ public class UserModel {
         Connection dbConnection = new DatabaseConnection().getDbConnection();
     }
 
-    public static User find(String name, String password){
+    public static User find(String name, String password) throws SQLException {
         String selectTableSQL = "SELECT * FROM users WHERE name = ? AND password = ? limit 1";
 
         try {
@@ -48,6 +48,10 @@ public class UserModel {
             System.out.println(e.getMessage());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }finally {
+            if (statement != null) {
+                statement.close();
+            }
         }
         return null;
     }

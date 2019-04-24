@@ -9,10 +9,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import sample.java_beans.User;
 import sample.services.auth.Auth;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class SignInController {
@@ -34,11 +36,17 @@ public class SignInController {
 
     @FXML
     void initialize() {
-        sign_in_button.setOnAction(event -> handle(event));
+        sign_in_button.setOnAction(event -> {
+            try {
+                handle(event);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 
-    private void handle(ActionEvent event){
+    private void handle(ActionEvent event) throws SQLException {
 
         String login =  this.sign_in_login.getText().trim();
         String password =  this.sign_in_password.getText().trim();
@@ -46,9 +54,11 @@ public class SignInController {
         if(!login.equals("") && !password.equals("")){
             System.out.println("Press login button. Login: " + login + ". Password: " + password);
 
-            if(Auth.login(login,password)){
+            Auth auth = new Auth();
+
+            if(auth.login(login,password)){
                 sign_in_button.getScene().getWindow().hide();
-                this.showNextWindow();
+                this.showNextWindow(auth.getUser());
             }
 
         }else {
@@ -57,9 +67,9 @@ public class SignInController {
 
     }
 
-    private void showNextWindow(){
+    private void showNextWindow(User user){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/views/competitionList.fxml"));
+        loader.setLocation(getClass().getResource("/sample/views/user.fxml"));
         try {
             loader.load();
         } catch (IOException e) {
