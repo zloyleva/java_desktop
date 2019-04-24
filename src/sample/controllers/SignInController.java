@@ -69,7 +69,18 @@ public class SignInController {
 
     private void showNextWindow(User user){
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sample/views/user.fxml"));
+
+        String title = "User's area";
+        if( "admin".equals(user.getRole()) ){
+            loader.setLocation(getClass().getResource("/sample/views/admin.fxml"));
+            title = "Admin's area";
+        }else if ("manager".equals(user.getRole())){
+            loader.setLocation(getClass().getResource("/sample/views/manager.fxml"));
+            title = "Manager's area";
+        }else {
+            loader.setLocation(getClass().getResource("/sample/views/user.fxml"));
+        }
+
         try {
             loader.load();
         } catch (IOException e) {
@@ -78,7 +89,7 @@ public class SignInController {
 
         Parent root = loader.getRoot();
         Stage stage = new Stage();
-        stage.setTitle("User's area");
+        stage.setTitle(title);
         stage.setResizable(false);
         stage.setScene(new Scene(root));
         stage.showAndWait();
